@@ -4,6 +4,6 @@ description: A real pretend server for testing.
 author: Chris Strom <chris@eeecomputes.com>
 homepage: https://github.com/eee-c/plummbur-kruk
 dependencies:
-  unittest: any
+  scheduled_test: any
   dirty: any
   uuid: any

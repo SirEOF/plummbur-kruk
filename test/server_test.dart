@@ -1,10 +1,10 @@
-library plumbur_kruk_test;
+library plummbur_kruk_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:scheduled_test/scheduled_test.dart';
 import 'package:unittest/mock.dart';
 import 'dart:io';
 
-import 'package:plumbur_kruk/server.dart' as PlumburKruk;
+import 'package:plummbur_kruk/server.dart' as PlumburKruk;
 
 class MockHttpRequest extends Mock implements HttpRequest {}
 class MockHttpResponse extends Mock implements HttpResponse {}
@@ -27,25 +27,30 @@ main(){
   group("Running Server", (){
     var server;
     setUp((){
-      return PlumburKruk.main()
-        ..then((s){ server = s; });
-    });
+      schedule(() {
+        return PlumburKruk.main()
+          ..then((s){ server = s; });
+      });
 
-    tearDown(() => server.close());
+      currentSchedule.
+        onComplete.
+        schedule(() => server.close());
+    });
 
     test("POST /stub responds successfully", (){
-      new HttpClient().
-        postUrl(Uri.parse("http://localhost:31337/stub")).
-        then((request) {
-          request.write('{"foo": 42}');
-          return request.close();
-        }).
-        then(expectAsync1(
-           (response) {
-             expect(response.statusCode, 204);
-           }
-        ));
+      schedule(() {
+        new HttpClient().
+          postUrl(Uri.parse("http://localhost:31337/stub")).
+          then((request) {
+            request.write('{"foo": 42}');
+            return request.close();
+          }).
+          then(wrapAsync(
+            (response) {
+              expect(response.statusCode, 204);
+            }
+          ));
+      });
     });
-
   });
 }
