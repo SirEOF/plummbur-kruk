@@ -29,27 +29,26 @@ main(){
     setUp((){
       schedule(() {
         return PlumburKruk.main()
-          ..then((s){ server = s; });
+          .then((s) { server = s; });
       });
 
       currentSchedule.
         onComplete.
-        schedule(() => server.close());
+        schedule(()=> server.close());
     });
 
     test("POST /stub responds successfully", (){
-      schedule(() {
-        new HttpClient().
+      var responseReady = schedule(() {
+        return new HttpClient().
           postUrl(Uri.parse("http://localhost:31337/stub")).
           then((request) {
             request.write('{"foo": 42}');
             return request.close();
-          }).
-          then(wrapAsync(
-            (response) {
-              expect(response.statusCode, 204);
-            }
-          ));
+          });
+      });
+
+      schedule(() {
+        responseReady.then((response)=> expect(response.statusCode, 204));
       });
     });
   });

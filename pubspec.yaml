@@ -7,3 +7,4 @@ dependencies:
   scheduled_test: any
   dirty: any
   uuid: any
+  browser: any
