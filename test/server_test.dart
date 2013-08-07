@@ -4,7 +4,7 @@ import 'package:scheduled_test/scheduled_test.dart';
 import 'package:unittest/mock.dart';
 import 'dart:io';
 
-import 'package:plummbur_kruk/server.dart' as PlumburKruk;
+import 'package:plummbur_kruk/server.dart' as Server;
 
 class MockHttpRequest extends Mock implements HttpRequest {}
 class MockHttpResponse extends Mock implements HttpResponse {}
@@ -16,7 +16,7 @@ main(){
       var req = new MockHttpRequest()
         ..when(callsTo('get response')).alwaysReturn(response);
 
-      PlumburKruk.notFoundResponse(req);
+      Server.notFoundResponse(req);
 
       response.
         getLogs(callsTo('set statusCode', 404)).
@@ -24,11 +24,40 @@ main(){
     });
   });
 
+  group("Creating an alias", (){
+    setUp((){
+      var server;
+      schedule(() {
+        return Server.main()
+          .then((s) { server = s; });
+      });
+
+      currentSchedule.
+        onComplete.
+        schedule(()=> server.close());
+    });
+
+    test("POST /alias with old and new URLs responds OK", (){
+      var responseReady = schedule(() {
+        return new HttpClient().
+          postUrl(Uri.parse("http://localhost:31337/alias")).
+          then((request) {
+            request.write('old=/widgets&new=/foo');
+            return request.close();
+          });
+      });
+
+      schedule(() {
+        responseReady.then((response)=> expect(response.statusCode, 204));
+      });
+    });
+  });
+
   group("Running Server", (){
     var server;
     setUp((){
       schedule(() {
-        return PlumburKruk.main()
+        return Server.main()
           .then((s) { server = s; });
       });
 

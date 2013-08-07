@@ -4,8 +4,14 @@ import 'package:scheduled_test/scheduled_test.dart';
 import 'dart:html';
 import 'dart:json' as JSON;
 
+import 'package:plummbur_kruk/kruk.dart';
+
+part 'kruk_test.dart';
+
+final String URL_ROOT = '${Kruk.SERVER_ROOT}/widgets';
+
 main() {
-  final String URL_ROOT = 'http://localhost:31337/widgets';
+  kruk_tests();
 
   group("/widgets -", (){
     setUp(() {

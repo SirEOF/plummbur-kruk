@@ -38,12 +38,22 @@ main() {
         return;
       }
 
-      if (req.uri.path.startsWith('/stub')) {
+      var path = req.uri.path;
+      if (aliases.containsKey(path)) {
+        path = aliases[path];
+      }
+
+      if (path.startsWith('/stub')) {
         addStub(req);
         return;
       }
 
-      if (req.uri.path.startsWith('/widgets')) {
+      if (path.startsWith('/alias')) {
+        addAlias(req);
+        return;
+      }
+
+      if (path.startsWith('/widgets')) {
         handleWidgets(req);
         return;
       }
@@ -64,6 +74,21 @@ addStub(req) {
     res.close();
   });
 }
+
+Map aliases = {};
+addAlias(req) {
+  req.toList().then((list) {
+    var body = new String.fromCharCodes(list[0]);
+    var alias = Uri.splitQueryString(body);
+    aliases[alias['new']] = alias['old'];
+
+    HttpResponse res = req.response;
+    res.statusCode = HttpStatus.NO_CONTENT;
+    res.close();
+  });
+}
+
+
 
 handleWidgets(req) {
   var r = new RegExp(r"/widgets/([-\w\d]+)");
