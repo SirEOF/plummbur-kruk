@@ -43,6 +43,12 @@ main() {
         path = aliases[path];
       }
 
+      if (path == '/ping') {
+        return req.response
+          ..statusCode = HttpStatus.OK
+          ..close();
+      }
+
       if (path.startsWith('/stub')) {
         addStub(req);
         return;

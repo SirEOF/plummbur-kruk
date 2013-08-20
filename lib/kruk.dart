@@ -15,8 +15,10 @@ class Kruk {
   }
 
   static bool get isAlive {
-    var req = new HttpRequest();
-    req.open('get', '/ping', async: false);
+    var req = new HttpRequest()
+      ..open('get', '${SERVER_ROOT}/ping', async: false)
+      ..send();
+
     return req.status == 200;
   }
 }

@@ -2,7 +2,11 @@ part of plummbur_kruk_test;
 
 kruk_tests() {
   group("The Mighty Kruk", (){
-    solo_test("Can alias a route in the server", (){
+    test("is alive", (){
+      expect(Kruk.isAlive, isTrue);
+    });
+
+    test("Can alias a route in the server", (){
       schedule(()=> post('${Kruk.SERVER_ROOT}/widgets', '{"name": "Sandman"}'));
       schedule(()=> Kruk.alias('/widgets', as: '/comics'));
 
