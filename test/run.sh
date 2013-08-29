@@ -21,12 +21,21 @@ for test in 'index'
 do
   echo "tests: $test"
   results=`content_shell --dump-render-tree test/$test.html 2>&1`
-  echo $results
-  echo "$results" | grep CONSOLE
+  echo "$results"
+  # echo "$results" | grep CONSOLE
+  # echo -e "$results"
 
-  echo "$results" | grep 'unittest-suite-success' >/dev/null
+  # check to see if DumpRenderTree tests
+  # fails, since it always returns 0
+  if [[ "$results" == *"Some tests failed"* ]]
+  then
+      exit 1
+  fi
 
-  echo "$results" | grep -v 'Exception: Some tests failed.' >/dev/null
+  if [[ "$results" == *"Exception: "* ]]
+  then
+      exit 1
+  fi
 done
 
 #TODO now need to exit 1 after killing the server...

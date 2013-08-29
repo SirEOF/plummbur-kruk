@@ -53,6 +53,36 @@ main(){
     });
   });
 
+  group("Restarting", (){
+    test("removes file DB", (){
+      var server;
+      schedule(() {
+        Server.main().then((s) { server = s; });
+      });
+
+      var responseReady = schedule(() {
+        return new HttpClient().
+          postUrl(Uri.parse("http://localhost:31337/widgets")).
+          then((request) {
+            request.write('{"name": "Sandman"}');
+            return request.close();
+          });
+      });
+
+      schedule(() { server.close(); });
+
+      schedule(() {
+        return Server.main().then((s) { server = s; });
+      });
+
+      schedule(() {
+        expect(new File('test.db').existsSync(), isFalse);
+      });
+
+      schedule(() { server.close(); });
+    });
+  });
+
   group("Running Server", (){
     var server;
     setUp((){
@@ -81,4 +111,6 @@ main(){
       });
     });
   });
+
+
 }

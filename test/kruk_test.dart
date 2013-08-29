@@ -18,5 +18,32 @@ kruk_tests() {
         });
       });
     });
+
+    test("can create records", (){
+      schedule(()=> Kruk.create('{"name": "Sandman"}'));
+
+      var ready = schedule(()=> get('${Kruk.SERVER_ROOT}/comics'));
+      schedule(() {
+        ready.then((json) {
+          var list = JSON.parse(json);
+          expect(list.first['name'], 'Sandman');
+        });
+      });
+    });
+
+
+    test("can delete all records", (){
+      schedule(()=> Kruk.create('{"name": "Sandman"}'));
+      schedule(()=> Kruk.create('{"name": "V for Vendetta"}'));
+      schedule(()=> Kruk.deleteAll());
+
+      var ready = schedule(()=> get('${Kruk.SERVER_ROOT}/comics'));
+      schedule(() {
+        ready.then((json) {
+          expect(json, '[]');
+        });
+      });
+    });
+
   });
 }

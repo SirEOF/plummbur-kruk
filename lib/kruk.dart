@@ -21,4 +21,19 @@ class Kruk {
 
     return req.status == 200;
   }
+
+  static Future<HttpRequest> create(String json) {
+    return HttpRequest.request(
+      '${SERVER_ROOT}/widgets',
+      method: 'post',
+      sendData: json
+    );
+  }
+
+  static Future<HttpRequest> deleteAll() {
+    return HttpRequest.request(
+      '${SERVER_ROOT}/widgets/ALL',
+      method: 'delete'
+    );
+  }
 }

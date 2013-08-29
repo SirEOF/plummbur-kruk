@@ -65,7 +65,8 @@ main() {
       }
 
       notFoundResponse(req);
-    });
+    },
+    onDone: removeDb);
 
     print('Server started on port: ${port}');
   });
@@ -93,8 +94,6 @@ addAlias(req) {
     res.close();
   });
 }
-
-
 
 handleWidgets(req) {
   var r = new RegExp(r"/widgets/([-\w\d]+)");
@@ -196,6 +195,13 @@ notFoundResponse(req) {
   res.statusCode = HttpStatus.NOT_FOUND;
   res.close();
 }
+
+removeDb() {
+  var db_file = new File('test.db');
+  if (!db_file.existsSync()) return;
+  db_file.deleteSync();
+}
+
 
 log(req) {
   req.response.done.then((res){
