@@ -13,8 +13,7 @@ echo
 echo "Running dart:html tests"
 
 # Start the test server
-dart test/dummy_server.dart &
-server_pid=$!
+packages/plummbur_kruk/start.sh
 
 # Run the actual tests
 for test in 'index'
@@ -38,8 +37,5 @@ do
   fi
 done
 
-#TODO now need to exit 1 after killing the server...
-
 # Stop the server
-kill $server_pid
-rm -f test.db test/test.db
+packages/plummbur_kruk/stop.sh
