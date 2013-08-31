@@ -6,6 +6,6 @@
 
 pid_file="kruk.pid"
 
-dart packages/plummbur_kruk/server.dart &
+dart --package-root=packages packages/plummbur_kruk/server.dart &
 server_pid=$!
 echo "$server_pid" > kruk.pid
