@@ -1,10 +1,10 @@
 name: plummbur_kruk
-version: 0.0.3
+version: 0.0.4
 description: A real pretend server for testing.
 author: Chris Strom <chris@eeecomputes.com>
 homepage: https://github.com/eee-c/plummbur-kruk
 dependencies:
-  dirty: ">=0.1.0 <0.1.1"
+  dirty: ">=0.1.1 <0.1.2"
   json: ">=0.6.9 <0.6.10"
   browser: ">=0.6.19 <0.6.20"
   scheduled_test: ">=0.6.19 <0.6.20"
