@@ -2,7 +2,7 @@ library plummbur_kruk_test;
 
 import 'package:scheduled_test/scheduled_test.dart';
 import 'dart:html';
-import 'dart:json' as JSON;
+import 'package:json/json.dart' as JSON;
 
 import 'package:plummbur_kruk/kruk.dart';
 

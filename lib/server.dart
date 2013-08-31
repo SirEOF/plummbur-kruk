@@ -1,7 +1,7 @@
 library plummbur_kruk;
 
 import 'dart:io';
-import 'dart:json' as JSON;
+import 'package:json/json.dart' as JSON;
 
 import 'package:dirty/dirty.dart';
 import 'package:uuid/uuid.dart';

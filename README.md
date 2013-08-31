@@ -2,6 +2,8 @@
 
 A “real fake” HTTP server specially designed to support browsers tests that make HTTP requests.
 
+[![](https://drone.io/eee-c/plummbur-kruk/status.png)](https://drone.io/eee-c/plummbur-kruk/latest)
+
 ## Getting Started
 
 You'll need [Dart](http://dartlang.org).
