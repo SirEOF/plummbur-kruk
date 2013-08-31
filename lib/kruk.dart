@@ -4,6 +4,7 @@ import 'dart:html';
 
 class Kruk {
   static String SERVER_ROOT = 'http://localhost:31337';
+  static String get widgets_url => '${SERVER_ROOT}/widgets';
 
   static Future<HttpRequest> alias(String old_url, {as: String}) {
     return HttpRequest.request(
