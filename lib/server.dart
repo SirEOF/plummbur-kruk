@@ -5,6 +5,7 @@ import 'package:json/json.dart' as JSON;
 
 import 'package:dirty/dirty.dart';
 import 'package:uuid/uuid.dart';
+import 'package:ansicolor/ansicolor.dart';
 
 Uuid uuid = new Uuid();
 Dirty db = new Dirty('test.db');
@@ -14,6 +15,8 @@ var stub;
 main() {
   var port = Platform.environment['PORT'] == null ?
     31337 : int.parse(Platform.environment['PORT']);
+
+  setEnvOptions();
 
   return HttpServer.bind('127.0.0.1', port)..then((app) {
 
@@ -70,6 +73,10 @@ main() {
 
     print('Server started on port: ${port}');
   });
+}
+
+setEnvOptions() {
+  if (Platform.environment['CI'] == 'true') color_disabled = true;
 }
 
 addStub(req) {
@@ -202,10 +209,18 @@ removeDb() {
   db_file.deleteSync();
 }
 
-
 log(req) {
   req.response.done.then((res){
     var now = new DateTime.now();
-    print('[${now}] "${req.method} ${req.uri.path}" ${res.statusCode}');
+    print('[${now}] "${req.method} ${req.uri.path}" ${logStatusCode(res)}');
   });
+}
+
+final AnsiPen red = new AnsiPen()..red(bold: true);
+final AnsiPen green = new AnsiPen()..green(bold: true);
+
+logStatusCode(HttpResponse res) {
+  var code = res.statusCode;
+  if (code > 399) return red(code);
+  return green(code);
 }
