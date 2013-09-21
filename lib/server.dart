@@ -2,6 +2,8 @@ library plummbur_kruk;
 
 import 'dart:io';
 import 'package:json/json.dart' as JSON;
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'package:dirty/dirty.dart';
 import 'package:uuid/uuid.dart';
@@ -27,7 +29,8 @@ main() {
       res.headers
         ..add('Access-Control-Allow-Origin', 'null')
         ..add('Access-Control-Allow-Headers', 'Content-Type')
-        ..add('Access-Control-Allow-Methods', 'DELETE,PUT');
+        ..add('Access-Control-Allow-Headers', 'X-Requested-With')
+        ..add('Access-Control-Allow-Methods', 'GET,DELETE,PUT');
 
       if (req.method == 'OPTIONS') {
         handleOptions(req);
@@ -211,9 +214,14 @@ removeDb() {
 
 log(req) {
   req.response.done.then((res){
-    var now = new DateTime.now();
-    print('[${now}] "${req.method} ${req.uri.path}" ${logStatusCode(res)}');
+    print('[${timestamp}] "${req.method} ${req.uri.path}" ${logStatusCode(res)}');
   });
+}
+
+final DateFormat _timestamp = new DateFormat();
+
+String get timestamp {
+  return _timestamp.format(new DateTime.now());
 }
 
 final AnsiPen red = new AnsiPen()..red(bold: true);
