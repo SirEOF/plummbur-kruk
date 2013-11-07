@@ -2,7 +2,7 @@ library plummbur_kruk_test;
 
 import 'package:scheduled_test/scheduled_test.dart';
 import 'dart:html';
-import 'package:json/json.dart' as JSON;
+import 'dart:convert';
 
 import 'package:plummbur_kruk/kruk.dart';
 
@@ -30,7 +30,7 @@ main() {
 
       schedule(() {
         responseReady.then((req) {
-          var rec = JSON.parse(req.response);
+          var rec = JSON.decode(req.response);
           expect(rec['test'], 42);
         });
       });
@@ -44,7 +44,7 @@ main() {
 
       schedule(() {
         response.then((json) {
-          var list = JSON.parse(json);
+          var list = JSON.decode(json);
           expect(list.length, 3);
         });
       });
@@ -58,7 +58,7 @@ main() {
       schedule(() {
         return post(URL_ROOT, '{"test": 1}').
           then((req) {
-            var rec = JSON.parse(req.response);
+            var rec = JSON.decode(req.response);
             id = rec['id'];
           });
       });
@@ -73,7 +73,7 @@ main() {
 
       schedule(() {
         response.then((json) {
-          var rec = JSON.parse(json);
+          var rec = JSON.decode(json);
           expect(rec['test'], 1);
         });
       });
@@ -85,7 +85,7 @@ main() {
 
       schedule(() {
         response.then((json) {
-          var rec = JSON.parse(json);
+          var rec = JSON.decode(json);
           expect(rec['test'], 42);
         });
       });

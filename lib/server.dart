@@ -1,7 +1,7 @@
 library plummbur_kruk;
 
 import 'dart:io';
-import 'package:json/json.dart' as JSON;
+import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -70,6 +70,10 @@ main() {
         return;
       }
 
+      if (Public.matcher(req)) {
+        return Public.handler(req);
+      }
+
       notFoundResponse(req);
     },
     onDone: removeDb);
@@ -124,7 +128,7 @@ createWidget(req) {
 
   req.toList().then((list) {
     var post_data = new String.fromCharCodes(list[0]);
-    var widget = JSON.parse(post_data);
+    var widget = JSON.decode(post_data);
     widget['id'] = uuid.v1();
 
     db[widget['id']] = widget;
@@ -133,7 +137,7 @@ createWidget(req) {
     res.headers.contentType =
       new ContentType("application", "json", charset: "utf-8");
 
-    res.write(JSON.stringify(widget));
+    res.write(JSON.encode(widget));
     res.close();
   });
 }
@@ -143,7 +147,7 @@ readWidgetCollection(req) {
   res.headers.contentType =
     new ContentType("application", "json", charset: "utf-8");
 
-  res.write(JSON.stringify(db.values.toList()));
+  res.write(JSON.encode(db.values.toList()));
   res.close();
 }
 
@@ -155,7 +159,7 @@ readWidget(id, req) {
   res.headers.contentType =
     new ContentType("application", "json", charset: "utf-8");
 
-  res.write(JSON.stringify(db[id]));
+  res.write(JSON.encode(db[id]));
   res.close();
 }
 
@@ -169,13 +173,13 @@ updateWidget(id, req) {
     then((list) {
       var data = list.expand((i)=>i),
           body = new String.fromCharCodes(data),
-          widget = db[id] = JSON.parse(body);
+          widget = db[id] = JSON.decode(body);
 
       res.statusCode = HttpStatus.OK;
       res.headers.contentType =
         new ContentType("application", "json", charset: "utf-8");
 
-      res.write(JSON.stringify(widget));
+      res.write(JSON.encode(widget));
       res.close();
     });
 }
@@ -222,6 +226,31 @@ final DateFormat _timestamp = new DateFormat();
 
 String get timestamp {
   return _timestamp.format(new DateTime.now());
+}
+
+class Public {
+  static matcher(HttpRequest req) {
+    if (req.method != 'GET') return false;
+
+    String path = publicPath(req.uri.path);
+    if (path == null) return false;
+
+    req.session['path'] = path;
+    return true;
+  }
+
+  static handler(req) {
+    var file = new File(req.session['path']);
+    var stream = file.openRead();
+      stream.pipe(req.response);
+  }
+
+  static String publicPath(String path) {
+    if (pathExists("web$path")) return "web$path";
+    if (pathExists("web$path/index.html")) return "web$path/index.html";
+  }
+
+  static bool pathExists(String path) => new File(path).existsSync();
 }
 
 final AnsiPen red = new AnsiPen()..red(bold: true);

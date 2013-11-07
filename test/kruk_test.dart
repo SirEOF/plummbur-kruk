@@ -13,7 +13,7 @@ kruk_tests() {
       var ready = schedule(()=> get('${Kruk.SERVER_ROOT}/comics'));
       schedule(() {
         ready.then((json) {
-          var list = JSON.parse(json);
+          var list = JSON.decode(json);
           expect(list.first['name'], 'Sandman');
         });
       });
@@ -25,7 +25,7 @@ kruk_tests() {
       var ready = schedule(()=> get('${Kruk.SERVER_ROOT}/comics'));
       schedule(() {
         ready.then((json) {
-          var list = JSON.parse(json);
+          var list = JSON.decode(json);
           expect(list.first['name'], 'Sandman');
         });
       });
