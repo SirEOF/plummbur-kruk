@@ -27,7 +27,7 @@ main() {
 
       HttpResponse res = req.response;
       res.headers
-        ..add('Access-Control-Allow-Origin', 'null')
+        ..add('Access-Control-Allow-Origin', '*')
         ..add('Access-Control-Allow-Headers', 'Content-Type')
         ..add('Access-Control-Allow-Headers', 'X-Requested-With')
         ..add('Access-Control-Allow-Methods', 'GET,DELETE,PUT');
