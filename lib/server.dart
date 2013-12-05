@@ -129,7 +129,7 @@ createWidget(req) {
   req.toList().then((list) {
     var post_data = new String.fromCharCodes(list[0]);
     var widget = JSON.decode(post_data);
-    widget['id'] = uuid.v1();
+    widget.putIfAbsent('id', () => uuid.v1());
 
     db[widget['id']] = widget;
 
